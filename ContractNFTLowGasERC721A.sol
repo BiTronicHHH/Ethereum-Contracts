@@ -13,8 +13,10 @@ contract NFTcontractName is ERC721A, Ownable, ReentrancyGuard { //Change contrac
 
   using Strings for uint256;
 
-// ================== Variables Start =======================
+// ================== Variables =======================
 
+  bool public sale = false;  //if false, then mint is paused. If true - mint is started
+  bool public revealed = true; //when you want instant reveal, leave true. 
   string public uri; //you don't change this
   string public uriSuffix = ".json"; //you don't change this
   string public hiddenMetadataUri; //you don't change this
@@ -25,12 +27,8 @@ contract NFTcontractName is ERC721A, Ownable, ReentrancyGuard { //Change contrac
   uint256 public maxMintAmountPerTxPhase1 = 1; //decide how many NFT's you want to mint with cost1
   uint256 public maxMintAmountPerTxPhase2 = 5; //decide how many NFT's you want to mint with cost2
   uint256 public maxLimitPerWallet = 20; //decide how many NFT's you want to let customers mint per wallet
-  bool public sale = false;  //if false, then mint is paused. If true - mint is started
-  bool public revealed = true; //when you want instant reveal, leave true. 
 
-// ================== Variables End =======================
-
-// ================== Constructor Start =======================
+// ================== Constructor =======================
   constructor(
     string memory _uri,
     string memory _hiddenMetadataUri
@@ -39,9 +37,9 @@ contract NFTcontractName is ERC721A, Ownable, ReentrancyGuard { //Change contrac
     setHiddenMetadataUri(_hiddenMetadataUri);
   }
 
-// ================== Mint Functions Start =======================
+// ================== Mint Functions =======================
 
-   function UpdateCost(uint256 _mintAmount) internal view returns  (uint256 _cost) {
+  function UpdateCost(uint256 _mintAmount) internal view returns  (uint256 _cost) {
 
     if (balanceOf(msg.sender) + _mintAmount <= maxMintAmountPerTxPhase1 && totalSupply() < supplyLimitPhase1) {
         return cost1;
